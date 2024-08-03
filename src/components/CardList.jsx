@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from './Card'; // Assuming you have a Card component
 import Heading from './Heading'; // Import the Heading component
 import './CardList.css'; // Import the CSS file
 
 const CardList = ({ data }) => {
-  const [users, setUsers] = useState(data);
+  const [users, setUsers] = useState(() => {
+    const savedUsers = localStorage.getItem('users');
+    return savedUsers ? JSON.parse(savedUsers) : data;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(users));
+  }, [users]);
 
   const toggleCheckin = (index) => {
     const newUsers = [...users];
