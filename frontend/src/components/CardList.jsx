@@ -38,10 +38,10 @@ const CardList = ({ users }) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredUsers = localUsers.filter((user) =>
+  const filteredUsers = Array.isArray(localUsers) ? localUsers.filter((user) =>
     user.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.EmailID.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) : [];
 
   return (
     <div className="card-list">
