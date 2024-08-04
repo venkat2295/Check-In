@@ -3,20 +3,35 @@ import Card from './Card'; // Assuming you have a Card component
 import Heading from './Heading'; // Import the Heading component
 import './CardList.css'; // Import the CSS file
 
-const CardList = ({ data }) => {
-  const [users, setUsers] = useState(() => {
-    const savedUsers = localStorage.getItem('users');
-    return savedUsers ? JSON.parse(savedUsers) : data;
-  });
+const CardList = ({ users }) => {
+  const [localUsers, setLocalUsers] = useState(users);
 
   useEffect(() => {
-    localStorage.setItem('users', JSON.stringify(users));
+    setLocalUsers(users);
   }, [users]);
 
-  const toggleCheckin = (index) => {
-    const newUsers = [...users];
+  const toggleCheckin = async (index) => {
+    const newUsers = [...localUsers];
     newUsers[index].checked = !newUsers[index].checked;
-    setUsers(newUsers);
+
+    // Update the status in the database
+    try {
+      const response = await fetch(`http://localhost:3000/users/${newUsers[index]._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ checked: newUsers[index].checked }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user status');
+      }
+
+      setLocalUsers(newUsers);
+    } catch (error) {
+      console.error('Error updating user status:', error);
+    }
   };
 
   return (
@@ -25,13 +40,12 @@ const CardList = ({ data }) => {
         <Heading />
       </div>
       <div className="cards-container">
-        {users.map((user, index) => (
+        {localUsers.map((user, index) => (
           <Card
             key={index}
             name={user.Name}
-            email={user["Email ID"]}
-            college={user["College Name"]}
-            phone={user["Phone No."]}
+            email={user.EmailID}
+            college={user.CollegeName}
             checked={user.checked}
             onToggle={() => toggleCheckin(index)}
           />
