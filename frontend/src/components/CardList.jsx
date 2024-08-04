@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Card from './Card'; // Assuming you have a Card component
-import Heading from './Heading'; // Import the Heading component
-import './CardList.css'; // Import the CSS file
+import Card from './Card';
+import Heading from './Heading';
+import './CardList.css';
 
 const CardList = ({ users }) => {
   const [localUsers, setLocalUsers] = useState(users);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     setLocalUsers(users);
@@ -14,7 +15,6 @@ const CardList = ({ users }) => {
     const newUsers = [...localUsers];
     newUsers[index].checked = !newUsers[index].checked;
 
-    // Update the status in the database
     try {
       const response = await fetch(`http://localhost:3000/users/${newUsers[index]._id}`, {
         method: 'PUT',
@@ -34,13 +34,31 @@ const CardList = ({ users }) => {
     }
   };
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredUsers = localUsers.filter((user) =>
+    user.Name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.EmailID.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="card-list">
       <div className="heading">
         <Heading />
       </div>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={searchTerm}
+          onChange={handleSearch}
+          className="search-input"
+        />
+      </div>
       <div className="cards-container">
-        {localUsers.map((user, index) => (
+        {filteredUsers.map((user, index) => (
           <Card
             key={index}
             name={user.Name}
