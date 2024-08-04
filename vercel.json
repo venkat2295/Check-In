@@ -8,5 +8,21 @@
         "source": "/(.*)",
         "destination": "/frontend/$1"
       }
+    ],
+    "builds": [
+      {
+        "src": "backend/package.json",
+        "use": "@vercel/node",
+        "config": {
+          "distDir": "dist"
+        }
+      },
+      {
+        "src": "frontend/package.json",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "dist"
+        }
+      }
     ]
   }
