@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "start": "node dist/server.js",
-    "dev": "nodemon src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src --out-dir dist"
-  },
+"scripts": {
+  "start": "node dist/server.js",
+  "dev": "nodemon src/server.js",
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "build": "npx babel src --out-dir dist"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,8 +20,8 @@
     "nodemon": "^3.1.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "@babel/cli": "^7.15.0",
-    "@babel/preset-env": "^7.15.0"
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3"
   }
 }
